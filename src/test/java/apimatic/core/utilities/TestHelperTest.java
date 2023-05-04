@@ -358,14 +358,14 @@ public class TestHelperTest {
                         + "9571247Z\"},{\"name\":\"Future Kid\",\"age\":5147483648,\"address\""
                         + ":\"H # 531, S # 20\",\"uid\":\"312341\",\"birthday\":\"1994-02-13\","
                         + "\"birthtime\":\"1994-02-13T14:01:54.9571247Z\"}],\"hiredAt\":"
-                        + "\"Sun, 06 Nov 1994 08:49:37 GMT\",\"promotedAt\":1484719381},"
+                        + "\"Sun., 06 Nov. 1994 08:49:37 GMT\",\"promotedAt\":1484719381},"
                         + "\"dependents\":[{\"name\":\"Future Wife\",\"age\":5147483649,"
                         + "\"address\":\"H # 531, S # 20\",\"uid\":\"123412\",\"birthday\":"
                         + "\"1994-02-13\",\"birthtime\":\"1994-02-13T14:01:54.9571247Z\"},"
                         + "{\"name\":\"Future Kid\",\"age\":5147483648,\"address\":"
                         + "\"H # 531, S # 20\",\"uid\":\"312341\",\"birthday\":\"1994-02-13\","
                         + "\"birthtime\":\"1994-02-13T14:01:54.9571247Z\"}],\"hiredAt\":"
-                        + "\"Sun, 06 Nov 1994 08:49:37 GMT\"},{\"name\":\"Shahid Khaliq\","
+                        + "\"Sun., 06 Nov. 1994 08:49:37 GMT\"},{\"name\":\"Shahid Khaliq\","
                         + "\"age\":5147483645,\"address\":\"H # 531, S # 20\",\"uid\":"
                         + "\"123321\",\"birthday\":\"1994-02-13\",\"birthtime\":"
                         + "\"1994-02-13T14:01:54.9571247Z\",\"salary\":20000,\"department\":"
@@ -382,7 +382,7 @@ public class TestHelperTest {
                         + "\"Future Kid\",\"age\":5147483648,\"address\":\"H # 531, S # 20\","
                         + "\"uid\":\"312341\",\"birthday\":\"1994-02-13\",\"birthtime\":"
                         + "\"1994-02-13T14:01:54.9571247Z\"}],\"hiredAt\":"
-                        + "\"Sun, 06 Nov 1994 08:49:37 GMT\",\"promotedAt\":1484719381},"
+                        + "\"Sun., 06 Nov. 1994 08:49:37 GMT\",\"promotedAt\":1484719381},"
                         + "\"dependents\":[{\"name\":\"Future Wife\",\"age\":5147483649,"
                         + "\"address\":\"H # 531, S # 20\",\"uid\":\"123412\",\"birthday\":"
                         + "\"1994-02-13\",\"birthtime\":\"1994-02-13T14:01:54.9571247Z\"},"
@@ -390,7 +390,7 @@ public class TestHelperTest {
                         + "\"address\":\"H # 531, S # 20\",\"uid\":\"312341\","
                         + "\"birthday\":\"1994-02-13\",\"birthtime\":"
                         + "\"1994-02-13T14:01:54.9571247Z\"}],\"hiredAt\":"
-                        + "\"Sun, 06 Nov 1994 08:49:37 GMT\"}]";
+                        + "\"Sun., 06 Nov. 1994 08:49:37 GMT\"}]";
         String rightObject =
                 "[{\"personType\":\"Empl\",\"name\":\"Shahid Khaliq\",\"age\":5147483645,"
                         + "\"address\":\"H # 531, S # 20\",\"uid\":\"123321\",\"birthday\":"
@@ -412,7 +412,7 @@ public class TestHelperTest {
                         + "\"age\":5147483648,\"address\":\"H # 531, S # 20\",\"uid\":\"312341\","
                         + "\"birthday\":\"1994-02-13\",\"birthtime\":\"1994-02-13T14:01:"
                         + "54.9571247Z\"}],"
-                        + "\"hiredAt\":\"Sun, 06 Nov 1994 08:49:37 GMT\",\"promotedAt\":"
+                        + "\"hiredAt\":\"Sun., 06 Nov. 1994 08:49:37 GMT\",\"promotedAt\":"
                         + "1484719381},\"dependents\":[{\"name\":\"Future Wife\",\"age\":"
                         + "5147483649,\"address\":\"H # 531, S # 20\",\"uid\":\"123412\","
                         + "\"birthday\":\"1994-02-13\",\"birthtime\":\"1994-02-13T14:01:"
@@ -420,7 +420,7 @@ public class TestHelperTest {
                         + "\"address\":\"H # 531, S # 20\",\"uid\":\"312341\","
                         + "\"birthday\":\"1994-02-13\",\"birthtime\":"
                         + "\"1994-02-13T14:01:54.9571247Z\"}],\"hiredAt\":"
-                        + "\"Sun, 06 Nov 1994 08:49:37 GMT\"},{\"personType\":"
+                        + "\"Sun., 06 Nov. 1994 08:49:37 GMT\"},{\"personType\":"
                         + "\"Empl\",\"name\":\"Shahid Khaliq\",\"age\":5147483645,"
                         + "\"address\":\"H # 531, S # 20\",\"uid\":\"123321\","
                         + "\"birthday\":\"1994-02-13\",\"birthtime\":"
@@ -440,14 +440,14 @@ public class TestHelperTest {
                         + ",{\"name\":\"Future Kid\",\"age\":5147483648,\"address\":"
                         + "\"H # 531, S # 20\",\"uid\":\"312341\",\"birthday\":"
                         + "\"1994-02-13\",\"birthtime\":\"1994-02-13T14:01:54.9571247Z\"}],"
-                        + "\"hiredAt\":\"Sun, 06 Nov 1994 08:49:37 GMT\",\"promotedAt\":"
+                        + "\"hiredAt\":\"Sun., 06 Nov. 1994 08:49:37 GMT\",\"promotedAt\":"
                         + "1484719381},\"dependents\":[{\"name\":\"Future Wife\",\"age\""
                         + ":5147483649,\"address\":\"H # 531, S # 20\",\"uid\":\"123412\","
                         + "\"birthday\":\"1994-02-13\",\"birthtime\":\"1994-02-13T14:01:54"
                         + ".9571247Z\"},{\"name\":\"Future Kid\",\"age\":5147483648,"
                         + "\"address\":\"H # 531, S # 20\",\"uid\":\"312341\",\"birthday\""
                         + ":\"1994-02-13\",\"birthtime\":\"1994-02-13T14:01:54.9571247Z\"}]"
-                        + ",\"hiredAt\":\"Sun, 06 Nov 1994 08:49:37 GMT\"}]";
+                        + ",\"hiredAt\":\"Sun., 06 Nov. 1994 08:49:37 GMT\"}]";
         boolean actual =
                 TestHelper.isArrayOfJsonObjectsProperSubsetOf(leftObject, rightObject, true, true,
                         false);
@@ -474,7 +474,7 @@ public class TestHelperTest {
                         + "\"Future Kid\",\"age\":5147483648,\"address\":"
                         + "\"H # 531, S # 20\",\"uid\":\"312341\",\"birthday\":"
                         + "\"1994-02-13\",\"birthtime\":\"1994-02-13T14:01:54.9571247Z\"}],"
-                        + "\"hiredAt\":\"Sun, 06 Nov 1994 08:49:37 GMT\","
+                        + "\"hiredAt\":\"Sun., 06 Nov. 1994 08:49:37 GMT\","
                         + "\"promotedAt\":1484719381},\"dependents\":"
                         + "[{\"name\":\"Future Wife\",\"age\":5147483649,"
                         + "\"address\":\"H # 531, S # 20\",\"uid\":"
@@ -484,7 +484,7 @@ public class TestHelperTest {
                         + "\"address\":\"H # 531, S # 20\",\"uid\":\"312341\","
                         + "\"birthday\":\"1994-02-13\",\"birthtime\":"
                         + "\"1994-02-13T14:01:54.9571247Z\"}],\"hiredAt\":"
-                        + "\"Sun, 06 Nov 1994 08:49:37 GMT\"},{\"name\":"
+                        + "\"Sun., 06 Nov. 1994 08:49:37 GMT\"},{\"name\":"
                         + "\"Shahid Khaliq\",\"age\":5147483645,\"address\":"
                         + "\"H # 531, S # 20\",\"uid\":\"123321\",\"birthday\":"
                         + "\"1994-02-13\",\"birthtime\":\"1994-02-13T14:01:54.9571247Z\","
@@ -503,7 +503,7 @@ public class TestHelperTest {
                         + "{\"name\":\"Future Kid\",\"age\":5147483648,\"address\":"
                         + "\"H # 531, S # 20\",\"uid\":\"312341\",\"birthday\":"
                         + "\"1994-02-13\",\"birthtime\":\"1994-02-13T14:01:54.9571247Z\"}],"
-                        + "\"hiredAt\":\"Sun, 06 Nov 1994 08:49:37 GMT\","
+                        + "\"hiredAt\":\"Sun., 06 Nov. 1994 08:49:37 GMT\","
                         + "\"promotedAt\":1484719381},\"dependents\":[{\"name\":"
                         + "\"Future Wife\",\"age\":5147483649,\"address\":"
                         + "\"H # 531, S # 20\",\"uid\":\"123412\",\"birthday\":"
@@ -511,7 +511,7 @@ public class TestHelperTest {
                         + ",{\"name\":\"Future Kid\",\"age\":5147483648,\"address\":"
                         + "\"H # 531, S # 20\",\"uid\":\"312341\",\"birthday\":\"1994-02-13\""
                         + ",\"birthtime\":\"1994-02-13T14:01:54.9571247Z\"}],\"hiredAt\":"
-                        + "\"Sun, 06 Nov 1994 08:49:37 GMT\"}]";
+                        + "\"Sun., 06 Nov. 1994 08:49:37 GMT\"}]";
         String rightObject =
                 "[{\"personType\":\"Empl\",\"name\":\"Shahid Khaliq\",\"age\":5147483645,"
                         + "\"address\":\"H # 531, S # 20\",\"uid\":\"123321\","
@@ -532,14 +532,14 @@ public class TestHelperTest {
                         + "\"age\":5147483648,\"address\":\"H # 531, S # 20\",\"uid\":"
                         + "\"312341\",\"birthday\":\"1994-02-13\",\"birthtime\":"
                         + "\"1994-02-13T14:01:54.9571247Z\"}],\"hiredAt\":"
-                        + "\"Sun, 06 Nov 1994 08:49:37 GMT\",\"promotedAt\":1484719381},"
+                        + "\"Sun., 06 Nov. 1994 08:49:37 GMT\",\"promotedAt\":1484719381},"
                         + "\"dependents\":[{\"name\":\"Future Wife\",\"age\":5147483649,"
                         + "\"address\":\"H # 531, S # 20\",\"uid\":\"123412\",\"birthday\":"
                         + "\"1994-02-13\",\"birthtime\":\"1994-02-13T14:01:54.9571247Z\"},"
                         + "{\"name\":\"Future Kid\",\"age\":5147483648,\"address\":"
                         + "\"H # 531, S # 20\",\"uid\":\"312341\",\"birthday\":"
                         + "\"1994-02-13\",\"birthtime\":\"1994-02-13T14:01:54.9571247Z\"}],"
-                        + "\"hiredAt\":\"Sun, 06 Nov 1994 08:49:37 GMT\"},{\"personType\":"
+                        + "\"hiredAt\":\"Sun., 06 Nov. 1994 08:49:37 GMT\"},{\"personType\":"
                         + "\"Empl\",\"name\":\"Shahid Khaliq\",\"age\":5147483645,\"address\":"
                         + "\"H # 531, S # 20\",\"uid\":\"123321\",\"birthday\":\"1994-02-13\","
                         + "\"birthtime\":\"1994-02-13T14:01:54.9571247Z\",\"salary\":20000,"
@@ -558,7 +558,7 @@ public class TestHelperTest {
                         + "\"Future Kid\",\"age\":5147483648,\"address\":"
                         + "\"H # 531, S # 20\",\"uid\":\"312341\",\"birthday\":"
                         + "\"1994-02-13\",\"birthtime\":\"1994-02-13T14:01:54.9571247Z\"}]"
-                        + ",\"hiredAt\":\"Sun, 06 Nov 1994 08:49:37 GMT\","
+                        + ",\"hiredAt\":\"Sun., 06 Nov. 1994 08:49:37 GMT\","
                         + "\"promotedAt\":1484719381},\"dependents\":[{"
                         + "\"name\":\"Future Wife\",\"age\":5147483649,"
                         + "\"address\":\"H # 531, S # 20\",\"uid\":\"123412\","
@@ -567,7 +567,7 @@ public class TestHelperTest {
                         + "\"age\":5147483648,\"address\":\"H # 531, S # 20\",\"uid\":"
                         + "\"312341\",\"birthday\":\"1994-02-13\",\"birthtime\":"
                         + "\"1994-02-13T14:01:54.9571247Z\"}],\"hiredAt\":"
-                        + "\"Sun, 06 Nov 1994 08:49:37 GMT\"}]";
+                        + "\"Sun., 06 Nov. 1994 08:49:37 GMT\"}]";
         boolean actual =
                 TestHelper.isArrayOfJsonObjectsProperSubsetOf(leftObject, rightObject, false, false,
                         false);
@@ -594,7 +594,7 @@ public class TestHelperTest {
                         + "\"Future Kid\",\"age\":5147483648,\"address\":"
                         + "\"H # 531, S # 20\",\"uid\":\"312341\",\"birthday\":"
                         + "\"1994-02-13\",\"birthtime\":\"1994-02-13T14:01:54.9571247Z\"}],"
-                        + "\"hiredAt\":\"Sun, 06 Nov 1994 08:49:37 GMT\","
+                        + "\"hiredAt\":\"Sun., 06 Nov. 1994 08:49:37 GMT\","
                         + "\"promotedAt\":1484719381},\"dependents\":"
                         + "[{\"name\":\"Future Wife\",\"age\":5147483649,"
                         + "\"address\":\"H # 531, S # 20\",\"uid\":"
@@ -604,7 +604,7 @@ public class TestHelperTest {
                         + "\"address\":\"H # 531, S # 20\",\"uid\":\"312341\","
                         + "\"birthday\":\"1994-02-13\",\"birthtime\":"
                         + "\"1994-02-13T14:01:54.9571247Z\"}],\"hiredAt\":"
-                        + "\"Sun, 06 Nov 1994 08:49:37 GMT\"},{\"name\":"
+                        + "\"Sun., 06 Nov. 1994 08:49:37 GMT\"},{\"name\":"
                         + "\"Shahid Khaliq\",\"age\":5147483645,\"address\":"
                         + "\"H # 531, S # 20\",\"uid\":\"123321\",\"birthday\":"
                         + "\"1994-02-13\",\"birthtime\":\"1994-02-13T14:01:54.9571247Z\","
@@ -623,7 +623,7 @@ public class TestHelperTest {
                         + "{\"name\":\"Future Kid\",\"age\":5147483648,\"address\":"
                         + "\"H # 531, S # 20\",\"uid\":\"312341\",\"birthday\":"
                         + "\"1994-02-13\",\"birthtime\":\"1994-02-13T14:01:54.9571247Z\"}],"
-                        + "\"hiredAt\":\"Sun, 06 Nov 1994 08:49:37 GMT\","
+                        + "\"hiredAt\":\"Sun., 06 Nov. 1994 08:49:37 GMT\","
                         + "\"promotedAt\":1484719381},\"dependents\":[{\"name\":"
                         + "\"Future Wife\",\"age\":5147483649,\"address\":"
                         + "\"H # 531, S # 20\",\"uid\":\"123412\",\"birthday\":"
@@ -631,7 +631,7 @@ public class TestHelperTest {
                         + ",{\"name\":\"Future Kid\",\"age\":5147483648,\"address\":"
                         + "\"H # 531, S # 20\",\"uid\":\"312341\",\"birthday\":\"1994-02-13\""
                         + ",\"birthtime\":\"1994-02-13T14:01:54.9571247Z\"}],\"hiredAt\":"
-                        + "\"Sun, 06 Nov 1994 08:49:37 GMT\"}]";
+                        + "\"Sun., 06 Nov. 1994 08:49:37 GMT\"}]";
         String rightObject =
                 "[{\"personType\":\"Empl\",\"name\":\"Shahid Khaliq\",\"age\":5147483645,"
                         + "\"address\":\"H # 531, S # 20\",\"uid\":\"123321\","
@@ -652,14 +652,14 @@ public class TestHelperTest {
                         + "\"age\":5147483648,\"address\":\"H # 531, S # 20\",\"uid\":"
                         + "\"312341\",\"birthday\":\"1994-02-13\",\"birthtime\":"
                         + "\"1994-02-13T14:01:54.9571247Z\"}],\"hiredAt\":"
-                        + "\"Sun, 06 Nov 1994 08:49:37 GMT\",\"promotedAt\":1484719381},"
+                        + "\"Sun., 06 Nov. 1994 08:49:37 GMT\",\"promotedAt\":1484719381},"
                         + "\"dependents\":[{\"name\":\"Future Wife\",\"age\":5147483649,"
                         + "\"address\":\"H # 531, S # 20\",\"uid\":\"123412\",\"birthday\":"
                         + "\"1994-02-13\",\"birthtime\":\"1994-02-13T14:01:54.9571247Z\"},"
                         + "{\"name\":\"Future Kid\",\"age\":5147483648,\"address\":"
                         + "\"H # 531, S # 20\",\"uid\":\"312341\",\"birthday\":"
                         + "\"1994-02-13\",\"birthtime\":\"1994-02-13T14:01:54.9571247Z\"}],"
-                        + "\"hiredAt\":\"Sun, 06 Nov 1994 08:49:37 GMT\"},{\"personType\":"
+                        + "\"hiredAt\":\"Sun., 06 Nov. 1994 08:49:37 GMT\"},{\"personType\":"
                         + "\"Empl\",\"name\":\"Shahid Khaliq\",\"age\":5147483645,\"address\":"
                         + "\"H # 531, S # 20\",\"uid\":\"123321\",\"birthday\":\"1994-02-13\","
                         + "\"birthtime\":\"1994-02-13T14:01:54.9571247Z\",\"salary\":20000,"
@@ -678,7 +678,7 @@ public class TestHelperTest {
                         + "\"Future Kid\",\"age\":5147483648,\"address\":"
                         + "\"H # 531, S # 20\",\"uid\":\"312341\",\"birthday\":"
                         + "\"1994-02-13\",\"birthtime\":\"1994-02-13T14:01:54.9571247Z\"}]"
-                        + ",\"hiredAt\":\"Sun, 06 Nov 1994 08:49:37 GMT\","
+                        + ",\"hiredAt\":\"Sun., 06 Nov. 1994 08:49:37 GMT\","
                         + "\"promotedAt\":1484719381},\"dependents\":[{"
                         + "\"name\":\"Future Wife\",\"age\":5147483649,"
                         + "\"address\":\"H # 531, S # 20\",\"uid\":\"123412\","
@@ -687,7 +687,7 @@ public class TestHelperTest {
                         + "\"age\":5147483648,\"address\":\"H # 531, S # 20\",\"uid\":"
                         + "\"312341\",\"birthday\":\"1994-02-13\",\"birthtime\":"
                         + "\"1994-02-13T14:01:54.9571247Z\"}],\"hiredAt\":"
-                        + "\"Sun, 06 Nov 1994 08:49:37 GMT\"}]";
+                        + "\"Sun., 06 Nov. 1994 08:49:37 GMT\"}]";
         boolean actual =
                 TestHelper.isArrayOfJsonObjectsProperSubsetOf(leftObject, rightObject, false, false,
                         true);
@@ -714,7 +714,7 @@ public class TestHelperTest {
                         + "\"Future Kid\",\"age\":5147483648,\"address\":"
                         + "\"H # 531, S # 20\",\"uid\":\"312341\",\"birthday\":"
                         + "\"1994-02-13\",\"birthtime\":\"1994-02-13T14:01:54.9571247Z\"}],"
-                        + "\"hiredAt\":\"Sun, 06 Nov 1994 08:49:37 GMT\","
+                        + "\"hiredAt\":\"Sun., 06 Nov. 1994 08:49:37 GMT\","
                         + "\"promotedAt\":1484719381},\"dependents\":"
                         + "[{\"name\":\"Future Wife\",\"age\":5147483649,"
                         + "\"address\":\"H # 531, S # 20\",\"uid\":"
@@ -724,7 +724,7 @@ public class TestHelperTest {
                         + "\"address\":\"H # 531, S # 20\",\"uid\":\"312341\","
                         + "\"birthday\":\"1994-02-13\",\"birthtime\":"
                         + "\"1994-02-13T14:01:54.9571247Z\"}],\"hiredAt\":"
-                        + "\"Sun, 06 Nov 1994 08:49:37 GMT\"},{\"name\":"
+                        + "\"Sun., 06 Nov. 1994 08:49:37 GMT\"},{\"name\":"
                         + "\"Shahid Khaliq\",\"age\":5147483645,\"address\":"
                         + "\"H # 531, S # 20\",\"uid\":\"123321\",\"birthday\":"
                         + "\"1994-02-13\",\"birthtime\":\"1994-02-13T14:01:54.9571247Z\","
@@ -743,7 +743,7 @@ public class TestHelperTest {
                         + "{\"name\":\"Future Kid\",\"age\":5147483648,\"address\":"
                         + "\"H # 531, S # 20\",\"uid\":\"312341\",\"birthday\":"
                         + "\"1994-02-13\",\"birthtime\":\"1994-02-13T14:01:54.9571247Z\"}],"
-                        + "\"hiredAt\":\"Sun, 06 Nov 1994 08:49:37 GMT\","
+                        + "\"hiredAt\":\"Sun., 06 Nov. 1994 08:49:37 GMT\","
                         + "\"promotedAt\":1484719381},\"dependents\":[{\"name\":"
                         + "\"Future Wife\",\"age\":5147483649,\"address\":"
                         + "\"H # 531, S # 20\",\"uid\":\"123412\",\"birthday\":"
@@ -751,7 +751,7 @@ public class TestHelperTest {
                         + ",{\"name\":\"Future Kid\",\"age\":5147483648,\"address\":"
                         + "\"H # 531, S # 20\",\"uid\":\"312341\",\"birthday\":\"1994-02-13\""
                         + ",\"birthtime\":\"1994-02-13T14:01:54.9571247Z\"}],\"hiredAt\":"
-                        + "\"Sun, 06 Nov 1994 08:49:37 GMT\"}]";
+                        + "\"Sun., 06 Nov. 1994 08:49:37 GMT\"}]";
         String rightObject =
                 "[{\"personType\":\"Empl\",\"name\":\"Shahid Khaliq\",\"age\":5147483645,"
                         + "\"address\":\"H # 531, S # 20\",\"uid\":\"123321\","
@@ -772,14 +772,14 @@ public class TestHelperTest {
                         + "\"age\":5147483648,\"address\":\"H # 531, S # 20\",\"uid\":"
                         + "\"312341\",\"birthday\":\"1994-02-13\",\"birthtime\":"
                         + "\"1994-02-13T14:01:54.9571247Z\"}],\"hiredAt\":"
-                        + "\"Sun, 06 Nov 1994 08:49:37 GMT\",\"promotedAt\":1484719381},"
+                        + "\"Sun., 06 Nov. 1994 08:49:37 GMT\",\"promotedAt\":1484719381},"
                         + "\"dependents\":[{\"name\":\"Future Wife\",\"age\":5147483649,"
                         + "\"address\":\"H # 531, S # 20\",\"uid\":\"123412\",\"birthday\":"
                         + "\"1994-02-13\",\"birthtime\":\"1994-02-13T14:01:54.9571247Z\"},"
                         + "{\"name\":\"Future Kid\",\"age\":5147483648,\"address\":"
                         + "\"H # 531, S # 20\",\"uid\":\"312341\",\"birthday\":"
                         + "\"1994-02-13\",\"birthtime\":\"1994-02-13T14:01:54.9571247Z\"}],"
-                        + "\"hiredAt\":\"Sun, 06 Nov 1994 08:49:37 GMT\"},{\"personType\":"
+                        + "\"hiredAt\":\"Sun., 06 Nov. 1994 08:49:37 GMT\"},{\"personType\":"
                         + "\"Empl\",\"name\":\"Shahid Khaliq\",\"age\":5147483645,\"address\":"
                         + "\"H # 531, S # 20\",\"uid\":\"123321\",\"birthday\":\"1994-02-13\","
                         + "\"birthtime\":\"1994-02-13T14:01:54.9571247Z\",\"salary\":20000,"
@@ -798,7 +798,7 @@ public class TestHelperTest {
                         + "\"Future Kid\",\"age\":5147483648,\"address\":"
                         + "\"H # 531, S # 20\",\"uid\":\"312341\",\"birthday\":"
                         + "\"1994-02-13\",\"birthtime\":\"1994-02-13T14:01:54.9571247Z\"}]"
-                        + ",\"hiredAt\":\"Sun, 06 Nov 1994 08:49:37 GMT\","
+                        + ",\"hiredAt\":\"Sun., 06 Nov. 1994 08:49:37 GMT\","
                         + "\"promotedAt\":1484719381},\"dependents\":[{"
                         + "\"name\":\"Future Wife\",\"age\":5147483649,"
                         + "\"address\":\"H # 531, S # 20\",\"uid\":\"123412\","
@@ -807,7 +807,7 @@ public class TestHelperTest {
                         + "\"age\":5147483648,\"address\":\"H # 531, S # 20\",\"uid\":"
                         + "\"312341\",\"birthday\":\"1994-02-13\",\"birthtime\":"
                         + "\"1994-02-13T14:01:54.9571247Z\"}],\"hiredAt\":"
-                        + "\"Sun, 06 Nov 1994 08:49:37 GMT\"}]";
+                        + "\"Sun., 06 Nov. 1994 08:49:37 GMT\"}]";
         boolean actual =
                 TestHelper.isArrayOfJsonObjectsProperSubsetOf(leftObject, rightObject, false, true,
                         true);

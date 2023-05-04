@@ -801,14 +801,14 @@ public class RequestBuilderTest extends MockCoreConfig {
                         + ":01:54.9571247Z\"},{\"name\":\"Future Kid\",\"age\":5147483648,"
                         + "\"address\":\"H # 531, S # 20\",\"uid\":\"312341\",\"birthday\":"
                         + "\"1994-02-13\",\"birthtime\":\"1994-02-13T14:01:54.9571247Z\"}],"
-                        + "\"hiredAt\":\"Sun, 06 Nov 1994 08:49:37 GMT\",\"promotedAt\":"
+                        + "\"hiredAt\":\"Sun., 06 Nov. 1994 08:49:37 GMT\",\"promotedAt\":"
                         + "1484719381},\"dependents\":[{\"name\":\"Future Wife\",\"age\":"
                         + "5147483649,\"address\":\"H # 531, S # 20\",\"uid\":\"123412\","
                         + "\"birthday\":\"1994-02-13\",\"birthtime\":\"1994-02-13T14:01:"
                         + "54.9571247Z\"},{\"name\":\"Future Kid\",\"age\":5147483648,\"address\""
                         + ":\"H # 531, S # 20\",\"uid\":\"312341\",\"birthday\":\"1994-02-13\","
                         + "\"birthtime\":\"1994-02-13T14:01:54.9571247Z\"}],\"hiredAt\":"
-                        + "\"Sun, 06 Nov 1994 08:49:37 GMT\"}",
+                        + "\"Sun., 06 Nov. 1994 08:49:37 GMT\"}",
                 Employee.class);
     }
 
@@ -829,14 +829,14 @@ public class RequestBuilderTest extends MockCoreConfig {
                         + "01:54.9571247Z\"},{\"name\":\"Future Kid\",\"age\":5147483648,"
                         + "\"address\":\"H # 531, S # 20\",\"uid\":\"312341\",\"birthday\":"
                         + "\"1994-02-13\",\"birthtime\":\"1994-02-13T14:01:54.9571247Z\"}],"
-                        + "\"hiredAt\":\"Sun, 06 Nov 1994 08:49:37 GMT\",\"promotedAt\":"
+                        + "\"hiredAt\":\"Sun., 06 Nov. 1994 08:49:37 GMT\",\"promotedAt\":"
                         + "1484719381},\"dependents\":[{\"name\":\"Future Wife\",\"age\":"
                         + "5147483649,\"address\":\"H # 531, S # 20\",\"uid\":\"123412\","
                         + "\"birthday\":\"1994-02-13\",\"birthtime\":\"1994-02-13T14:01:54"
                         + ".9571247Z\"},{\"name\":\"Future Kid\",\"age\":5147483648,\"address\""
                         + ":\"H # 531, S # 20\",\"uid\":\"312341\",\"birthday\":\"1994-02-13\","
                         + "\"birthtime\":\"1994-02-13T14:01:54.9571247Z\"}],\"hiredAt\":"
-                        + "\"Sun, 06 Nov 1994 08:49:37 GMT\"},{\"name\":\"Shahid Khaliq"
+                        + "\"Sun., 06 Nov. 1994 08:49:37 GMT\"},{\"name\":\"Shahid Khaliq"
                         + "\",\"age\":5147483645,\"address\":\"H # 531, S # 20\",\"uid\":"
                         + "\"123321\",\"birthday\":\"1994-02-13\",\"birthtime\":"
                         + "\"1994-02-13T14:01:54.9571247Z\",\"salary\":20000,\"department\":"
@@ -852,14 +852,14 @@ public class RequestBuilderTest extends MockCoreConfig {
                         + ":\"1994-02-13T14:01:54.9571247Z\"},{\"name\":\"Future Kid\","
                         + "\"age\":5147483648,\"address\":\"H # 531, S # 20\",\"uid\":"
                         + "\"312341\",\"birthday\":\"1994-02-13\",\"birthtime\":\"1994-02-13T14"
-                        + ":01:54.9571247Z\"}],\"hiredAt\":\"Sun, 06 Nov 1994 08:49:37 GMT\","
+                        + ":01:54.9571247Z\"}],\"hiredAt\":\"Sun., 06 Nov. 1994 08:49:37 GMT\","
                         + "\"promotedAt\":1484719381},\"dependents\":[{\"name\":\"Future Wife\""
                         + ",\"age\":5147483649,\"address\":\"H # 531, S # 20\",\"uid\":\"123412\""
                         + ",\"birthday\":\"1994-02-13\",\"birthtime\":\"1994-02-13T14:01:54."
                         + "9571247Z\"},{\"name\":\"Future Kid\",\"age\":5147483648,\"address\":"
                         + "\"H # 531, S # 20\",\"uid\":\"312341\",\"birthday\":\"1994-02-13\","
                         + "\"birthtime\":\"1994-02-13T14:01:54.9571247Z\"}],\"hiredAt\":\"Su"
-                        + "n, 06 Nov 1994 08:49:37 GMT\"}]",
+                        + "n., 06 Nov. 1994 08:49:37 GMT\"}]",
                 Employee[].class);
     }
 }

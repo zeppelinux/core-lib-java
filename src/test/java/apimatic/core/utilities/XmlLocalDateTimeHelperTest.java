@@ -51,7 +51,7 @@ public class XmlLocalDateTimeHelperTest {
         String rootName = "XmlRootName";
 
         // stub
-        String expected = "<XmlRootName>Thu, 13 Jul 2000 06:10:00 GMT</XmlRootName>";
+        String expected = "<XmlRootName>Thu., 13 Jul. 2000 06:10:00 GMT</XmlRootName>";
         String actual = XmlLocalDateTimeHelper.serializeRfc1123DateTime(localDateTime, rootName);
 
         assertEquals(actual, expected);
@@ -59,7 +59,7 @@ public class XmlLocalDateTimeHelperTest {
 
     @Test
     public void testDeserializeRfc1123DateTime() {
-        String dateTime = "<XmlRootName>Thu, 13 Jul 2000 06:10:00 GMT</XmlRootName>";
+        String dateTime = "<XmlRootName>Thu., 13 Jul. 2000 06:10:00 GMT</XmlRootName>";
 
         // stub
         LocalDateTime expected = LocalDateTime.of(YEAR2000, JULY, DAY13, HOUR6, MINUTES10);
@@ -70,7 +70,7 @@ public class XmlLocalDateTimeHelperTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testDeserializeRfc1123DateTimeInvalidXml() {
-        String dateTime = "<Thu, 13 Jul 2000 06:10:00 GMTXmlRootName>";
+        String dateTime = "<Thu., 13 Jul. 2000 06:10:00 GMTXmlRootName>";
         XmlLocalDateTimeHelper.deserializeRfc1123DateTime(dateTime);
     }
 

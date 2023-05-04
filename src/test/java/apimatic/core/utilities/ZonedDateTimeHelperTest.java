@@ -38,7 +38,7 @@ public class ZonedDateTimeHelperTest {
         ZonedDateTime zonedDateTime =
                 ZonedDateTime.of(YEAR1997, JULY, DAY13, HOUR6, MINUTES10, 0, 0, ZoneId.of("GMT"));
         // stub
-        String expected = "Sun, 13 Jul 1997 06:10:00 GMT";
+        String expected = "Sun., 13 Jul. 1997 06:10:00 GMT";
         String actual = ZonedDateTimeHelper.toRfc1123DateTime(zonedDateTime);
         assertEquals(actual, expected);
     }
@@ -59,7 +59,7 @@ public class ZonedDateTimeHelperTest {
 
         // stub
         List<String> expected =
-                Arrays.asList("Thu, 13 Jul 2000 06:10:00 GMT", "Sat, 25 Jul 2020 06:10:00 GMT");
+                Arrays.asList("Thu., 13 Jul. 2000 06:10:00 GMT", "Sat., 25 Jul. 2020 06:10:00 GMT");
 
         List<String> actual = ZonedDateTimeHelper.toRfc1123DateTime(dateTimeArray);
         assertEquals(actual, expected);
@@ -84,8 +84,8 @@ public class ZonedDateTimeHelperTest {
 
         // stub
         Map<String, String> expected = new HashMap<>();
-        expected.put("dateTime1", "Thu, 13 Jul 2000 06:10:00 GMT");
-        expected.put("dateTime2", "Sat, 25 Jul 2020 06:10:00 GMT");
+        expected.put("dateTime1", "Thu., 13 Jul. 2000 06:10:00 GMT");
+        expected.put("dateTime2", "Sat., 25 Jul. 2020 06:10:00 GMT");
 
 
 
@@ -106,8 +106,8 @@ public class ZonedDateTimeHelperTest {
 
         // stub
         Map<String, String> mapOfString = new HashMap<>();
-        mapOfString.put("dateTime1", "Thu, 13 Jul 2000 06:10:00 GMT");
-        mapOfString.put("dateTime2", "Sat, 25 Jul 2020 06:10:00 GMT");
+        mapOfString.put("dateTime1", "Thu., 13 Jul. 2000 06:10:00 GMT");
+        mapOfString.put("dateTime2", "Sat., 25 Jul. 2020 06:10:00 GMT");
 
         List<Map<String, String>> expected = Arrays.asList(mapOfString);
 
@@ -441,7 +441,7 @@ public class ZonedDateTimeHelperTest {
 
     @Test
     public void testFromRfc1123String() {
-        String date = "Sun, 13 Jul 1997 06:10:00 GMT";
+        String date = "Sun., 13 Jul. 1997 06:10:00 GMT";
 
         ZonedDateTime expected =
                 ZonedDateTime.of(YEAR1997, JULY, DAY13, HOUR6, MINUTES10, 0, 0, ZoneId.of("GMT"));
@@ -471,7 +471,7 @@ public class ZonedDateTimeHelperTest {
         module.addSerializer(zonedDateTime.getClass(), serializer);
         mapper.registerModule(module);
 
-        String expected = "\"Sun, 13 Jul 1997 01:10:00 GMT\"";
+        String expected = "\"Sun., 13 Jul. 1997 01:10:00 GMT\"";
         String actual = mapper.writeValueAsString(zonedDateTime);
         assertEquals(actual, expected);
     }
@@ -486,7 +486,7 @@ public class ZonedDateTimeHelperTest {
         module.addDeserializer(ZonedDateTime.class, deserializer);
         mapper.registerModule(module);
 
-        String datetime = "\"Sun, 13 Jul 1997 06:10:00 GMT\"";
+        String datetime = "\"Sun., 13 Jul. 1997 06:10:00 GMT\"";
         LocalDateTime localDateTime = LocalDateTime.of(YEAR1997, JULY, DAY13, HOUR6, MINUTES10);
         ZonedDateTime expected = localDateTime.atZone(ZoneId.of("GMT"));
         ZonedDateTime actual = mapper.readValue(datetime, ZonedDateTime.class);
