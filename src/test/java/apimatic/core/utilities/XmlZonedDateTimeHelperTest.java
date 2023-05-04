@@ -51,7 +51,7 @@ public class XmlZonedDateTimeHelperTest {
         String rootName = "XmlRootName";
 
         // stub
-        String expected = "<XmlRootName>Sun., 13 Jul. 1997 06:10:00 GMT</XmlRootName>";
+        String expected = "<XmlRootName>Sun, 13 Jul 1997 06:10:00 GMT</XmlRootName>";
         String actual = XmlZonedDateTimeHelper.serializeRfc1123DateTime(zonedDateTime, rootName);
 
         assertEquals(actual, expected);
@@ -59,7 +59,7 @@ public class XmlZonedDateTimeHelperTest {
 
     @Test
     public void testDeserializeRfc1123DateTime() {
-        String zonedDateTime = "<XmlRootName>Sun., 13 Jul. 1997 06:10:00 GMT</XmlRootName>";
+        String zonedDateTime = "<XmlRootName>Sun, 13 Jul 1997 06:10:00 GMT</XmlRootName>";
 
         // stub
         ZonedDateTime expected =
@@ -71,7 +71,7 @@ public class XmlZonedDateTimeHelperTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testDeserializeRfc1123DateTimeInvalidXml() {
-        String zonedDateTime = "<XmlRootNameSun., 13 Jul. 1997 06:10:00 GMTXmlRootName>";
+        String zonedDateTime = "<XmlRootNameSun, 13 Jul 1997 06:10:00 GMTXmlRootName>";
         XmlZonedDateTimeHelper.deserializeRfc1123DateTime(zonedDateTime);
     }
 

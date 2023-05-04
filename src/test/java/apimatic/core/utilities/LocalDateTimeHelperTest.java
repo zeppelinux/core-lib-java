@@ -38,7 +38,7 @@ public class LocalDateTimeHelperTest {
         LocalDateTime dateTime = LocalDateTime.of(YEAR1997, JULY, DAY13, HOUR6, MINUTES10);
 
         // stub
-        String expected = "Sun., 13 Jul. 1997 06:10:00 GMT";
+        String expected = "Sun, 13 Jul 1997 06:10:00 GMT";
         String actual = LocalDateTimeHelper.toRfc1123DateTime(dateTime);
         assertEquals(actual, expected);
     }
@@ -57,7 +57,7 @@ public class LocalDateTimeHelperTest {
 
         // stub
         List<String> expected =
-                Arrays.asList("Thu., 13 Jul. 2000 06:10:00 GMT", "Sat., 25 Jul. 2020 06:10:00 GMT");
+                Arrays.asList("Thu, 13 Jul 2000 06:10:00 GMT", "Sat, 25 Jul 2020 06:10:00 GMT");
 
         assertEquals(LocalDateTimeHelper.toRfc1123DateTime(dateTimeArray), expected);
     }
@@ -79,8 +79,8 @@ public class LocalDateTimeHelperTest {
 
         // stub
         Map<String, String> expected = new HashMap<>();
-        expected.put("dateTime1", "Thu., 13 Jul. 2000 06:10:00 GMT");
-        expected.put("dateTime2", "Sat., 25 Jul. 2020 06:10:00 GMT");
+        expected.put("dateTime1", "Thu, 13 Jul 2000 06:10:00 GMT");
+        expected.put("dateTime2", "Sat, 25 Jul 2020 06:10:00 GMT");
 
         assertEquals(LocalDateTimeHelper.toRfc1123DateTime(dateTimeMap), expected);
 
@@ -98,8 +98,8 @@ public class LocalDateTimeHelperTest {
 
         // stub
         Map<String, String> mapOfStrings = new HashMap<>();
-        mapOfStrings.put("dateTime1", "Thu., 13 Jul. 2000 06:10:00 GMT");
-        mapOfStrings.put("dateTime2", "Sat., 25 Jul. 2020 06:10:00 GMT");
+        mapOfStrings.put("dateTime1", "Thu, 13 Jul 2000 06:10:00 GMT");
+        mapOfStrings.put("dateTime2", "Sat, 25 Jul 2020 06:10:00 GMT");
 
         List<Map<String, String>> expected = Arrays.asList(mapOfStrings);
 
@@ -440,7 +440,7 @@ public class LocalDateTimeHelperTest {
 
     @Test
     public void testFromRfc1123String() {
-        String date = "Sun., 13 Jul. 1997 06:10:00 GMT";
+        String date = "Sun, 13 Jul 1997 06:10:00 GMT";
         LocalDateTime expected = LocalDateTime.of(YEAR1997, JULY, DAY13, HOUR6, MINUTES10);
         LocalDateTime actualValue = LocalDateTimeHelper.fromRfc1123DateTime(date);
         assertEquals(actualValue, expected);
@@ -465,7 +465,7 @@ public class LocalDateTimeHelperTest {
         module.addSerializer(localDateTime.getClass(), serializer);
         mapper.registerModule(module);
 
-        String expected = "\"Sun., 13 Jul. 1997 06:10:00 GMT\"";
+        String expected = "\"Sun, 13 Jul 1997 06:10:00 GMT\"";
 
         String actual = mapper.writeValueAsString(localDateTime);
 
@@ -482,7 +482,7 @@ public class LocalDateTimeHelperTest {
         module.addDeserializer(LocalDateTime.class, deserializer);
         mapper.registerModule(module);
 
-        String datetime = "\"Sun., 13 Jul. 1997 06:10:00 GMT\"";
+        String datetime = "\"Sun, 13 Jul 1997 06:10:00 GMT\"";
         LocalDateTime expected = LocalDateTime.of(YEAR1997, JULY, DAY13, HOUR6, MINUTES10);
         LocalDateTime actual = mapper.readValue(datetime, LocalDateTime.class);
         assertEquals(actual, expected);

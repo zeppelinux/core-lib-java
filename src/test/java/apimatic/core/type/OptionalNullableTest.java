@@ -46,25 +46,25 @@ public class OptionalNullableTest {
      * RFC 1123 date string.
      */
     private static final String RFC1123_DATE =
-            "{\"dateTime\":\"Wed., 20 Jan. 2021 12:12:41 GMT\",\"dateTime1\":null}";
+            "{\"dateTime\":\"Wed, 20 Jan 2021 12:12:41 GMT\",\"dateTime1\":null}";
 
     /**
      * RFC 1123 date array string.
      */
     private static final String RFC1123_DATE_ARRAY =
-            "{\"dateTime\":[\"Wed., 20 Jan. 2021 12:12:41 GMT\","
-                    + "\"Wed., 20 Jan. 2021 12:12:41 GMT\"],\"dateTime1\":null}";
+            "{\"dateTime\":[\"Wed, 20 Jan 2021 12:12:41 GMT\","
+                    + "\"Wed, 20 Jan 2021 12:12:41 GMT\"],\"dateTime1\":null}";
     /**
      * RFC 1123 Date array string.
      */
     private static final String RFC1123_DATE_ARRAY1 =
-            "{\"dateTime1\":[\"Wed., 20 Jan. 2021 12:12:41 GMT\","
-                    + "\"Wed., 20 Jan. 2021 12:12:41 GMT\"],\"dateTime\":null}";
+            "{\"dateTime1\":[\"Wed, 20 Jan 2021 12:12:41 GMT\","
+                    + "\"Wed, 20 Jan 2021 12:12:41 GMT\"],\"dateTime\":null}";
     /**
      * RFC 1123 map array.
      */
     private static final String RFC1123_DATE_MAP =
-            "{\"dateTime\":{\"key\":\"Wed., 20 Jan. 2021 12:12:41 GMT\"},\"dateTime1\":null}";
+            "{\"dateTime\":{\"key\":\"Wed, 20 Jan 2021 12:12:41 GMT\"},\"dateTime1\":null}";
 
     /**
      * RFC 8601 date string.

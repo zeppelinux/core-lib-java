@@ -1217,8 +1217,8 @@ public class CoreHelperTest {
     public void testPrepareFormFieldOneOfAnyOfDateTime() throws IOException {
         DateTimeCases formDateTimeCases =
                 CoreHelper.deserialize(
-                        "{\"mapvsArray\":{\"key1\":" + "\"Sun., 06 Nov. 1994 08:49:37 GMT\","
-                                + "\"key2\":\"Sun., 06 Nov. 1994 08:49:37 GMT\"}}",
+                        "{\"mapvsArray\":{\"key1\":" + "\"Sun, 06 Nov 1994 08:49:37 GMT\","
+                                + "\"key2\":\"Sun, 06 Nov 1994 08:49:37 GMT\"}}",
                         DateTimeCases.class);
 
         Map<String, Object> formParameters = new HashMap<>();
