@@ -5,17 +5,22 @@ import static org.junit.Assert.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyMap;
+import static org.mockito.ArgumentMatchers.nullable;
 import static org.mockito.Mockito.when;
+
 import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
+
 import apimatic.core.exceptions.GlobalTestException;
 import apimatic.core.mocks.MockCoreConfig;
 import io.apimatic.core.ApiCall;
@@ -49,6 +54,47 @@ public class EndToEndTest extends MockCoreConfig {
     private static final int GONE_CLIENT = 410;
 
     /**
+     * Map of Global Error Cases
+     */
+    protected static final Map<String, ErrorCase<CoreApiException>> GLOBAL_ERROR_CASES =
+            new HashMap<String, ErrorCase<CoreApiException>>() {
+        private static final long serialVersionUID = 1L;
+        {
+            put("400", ErrorCase.setTemplate(
+                    "Failed to make the request, {$statusCode} {$response.body#/errors/0/code} - "
+                            + "{$response.body#/errors/0/detail}",
+                    (reason, context) -> new GlobalTestException(reason, context)));
+            put("404", ErrorCase.setReason("Not found",
+                    (reason, context) -> new CoreApiException(reason, context)));
+            put("401",
+                    ErrorCase.setTemplate("Failed to make the request, "
+                            + "{$response.header.content-type} {$response.body#/errors/0/code}"
+                            + " - {$response.body#/errors/0/detail}",
+                            (reason, context) -> new CoreApiException(reason, context)));
+            put("410",
+                    ErrorCase.setTemplate("Failed to make the request, {$response.body}",
+                            (reason, context) -> new CoreApiException(reason, context)));
+            put("405",
+                    ErrorCase.setTemplate("Failed to make the request, {$response.header.accept} "
+                            + "{$response.body#/errors/0/code} - {$response.body#/errors/0/detail}",
+                            (reason, context) -> new CoreApiException(reason, context)));
+            put("500",
+                    ErrorCase.setTemplate("Failed to make the request, http status code:"
+                            + " {$statusCode}",
+                            (reason, context) -> new CoreApiException(reason, context)));
+            put("4XX",
+                    ErrorCase.setTemplate(
+                            "Failed to make the request, {$response.body#/errors/0/code}"
+                                    + " - {$response.body#/errors/0/detail}",
+                            (reason, context) -> new CoreApiException(reason, context)));
+            put(ErrorCase.DEFAULT,
+                    ErrorCase.setReason(
+                            "Failed to make the request, {$response.body#/errors/0/code}"
+                                    + " - {$response.body#/errors/0/detail}",
+                            (reason, context) -> new CoreApiException(reason, context)));
+        }};
+
+    /**
      * Initializes mocks annotated with Mock.
      */
     @Rule
@@ -78,6 +124,25 @@ public class EndToEndTest extends MockCoreConfig {
     @Mock
     private Response response;
 
+    /**
+     * Returns the current Response object.
+     *
+     * @return the response instance
+     */
+    protected Response getResponse() {
+        return response;
+    }
+
+    /**
+     * Allows subclasses to customize how the response is set.
+     * <p>
+     * Ensure that the response is correctly handled and does not introduce memory leaks.
+     *
+     * @param response The response to set.
+     */
+    protected void setResponse(Response response) {
+        this.response = response;
+    }
 
     /**
      * Mock of {@link Request}.
@@ -110,7 +175,6 @@ public class EndToEndTest extends MockCoreConfig {
         String actual = getApiCall().execute();
         assertEquals(actual, expected);
     }
-
 
     /**
      * Test the local error template.
@@ -353,7 +417,8 @@ public class EndToEndTest extends MockCoreConfig {
 
     private ApiCall<String, CoreApiException> getApiCall() throws IOException {
         when(response.getBody()).thenReturn("\"Turtle\"");
-        return new ApiCall.Builder<String, CoreApiException>().globalConfig(getGlobalConfig())
+        return new ApiCall.Builder<String, CoreApiException>()
+                .globalConfig(getGlobalConfig(callback))
                 .requestBuilder(requestBuilder -> requestBuilder.server("https://localhost:3000")
                         .path("/v2/bank-accounts")
                         .queryParam(param -> param.key("cursor").value("cursor").isRequired(false))
@@ -361,7 +426,8 @@ public class EndToEndTest extends MockCoreConfig {
                         .templateParam(param -> param.key("location_id").value("locationId")
                                 .shouldEncode(true).isRequired(false))
                         .headerParam(param -> param.key("accept").value("application/json"))
-                        .authenticationKey("global").httpMethod(Method.GET))
+                        .withAuth(auth -> auth.add("global"))
+                        .httpMethod(Method.GET))
                 .responseHandler(responseHandler -> responseHandler
                         .deserializer(response -> CoreHelper.deserialize(response, String.class))
                         .nullify404(false).globalErrorCase(Collections.emptyMap()))
@@ -375,7 +441,8 @@ public class EndToEndTest extends MockCoreConfig {
             int statusCode) throws IOException {
         when(response.getBody()).thenReturn(responseString);
         when(response.getStatusCode()).thenReturn(statusCode);
-        return new ApiCall.Builder<String, CoreApiException>().globalConfig(getGlobalConfig())
+        return new ApiCall.Builder<String, CoreApiException>()
+                .globalConfig(getGlobalConfig(callback))
                 .requestBuilder(requestBuilder -> requestBuilder.server("https://localhost:3000")
                         .path("/v2/bank-accounts")
                         .queryParam(param -> param.key("cursor").value("cursor").isRequired(false))
@@ -383,7 +450,8 @@ public class EndToEndTest extends MockCoreConfig {
                         .templateParam(param -> param.key("location_id").value("locationId")
                                 .shouldEncode(true).isRequired(false))
                         .headerParam(param -> param.key("accept").value("application/json"))
-                        .authenticationKey("global").httpMethod(Method.GET))
+                        .withAuth(auth -> auth.add("global"))
+                        .httpMethod(Method.GET))
                 .responseHandler(responseHandler -> responseHandler
                         .deserializer(response -> CoreHelper.deserialize(response, String.class))
                         .localErrorCase("400",
@@ -404,7 +472,8 @@ public class EndToEndTest extends MockCoreConfig {
             int statusCode) throws IOException {
         when(response.getBody()).thenReturn(responseString);
         when(response.getStatusCode()).thenReturn(statusCode);
-        return new ApiCall.Builder<String, CoreApiException>().globalConfig(getGlobalConfig())
+        return new ApiCall.Builder<String, CoreApiException>()
+                .globalConfig(getGlobalConfig(callback))
                 .requestBuilder(requestBuilder -> requestBuilder.server("https://localhost:3000")
                         .path("/v2/bank-accounts")
                         .queryParam(param -> param.key("cursor").value("cursor").isRequired(false))
@@ -412,10 +481,11 @@ public class EndToEndTest extends MockCoreConfig {
                         .templateParam(param -> param.key("location_id").value("locationId")
                                 .shouldEncode(true).isRequired(false))
                         .headerParam(param -> param.key("accept").value("application/json"))
-                        .authenticationKey("global").httpMethod(Method.GET))
+                        .withAuth(auth -> auth.add("global"))
+                        .httpMethod(Method.GET))
                 .responseHandler(responseHandler -> responseHandler
                         .deserializer(response -> CoreHelper.deserialize(response, String.class))
-                        .nullify404(false).globalErrorCase(getGlobalErrorCases()))
+                        .nullify404(false).globalErrorCase(GLOBAL_ERROR_CASES))
                 .endpointConfiguration(
                         param -> param.arraySerializationFormat(ArraySerializationFormat.INDEXED)
                                 .hasBinaryResponse(false).retryOption(RetryOption.DEFAULT))
@@ -430,7 +500,8 @@ public class EndToEndTest extends MockCoreConfig {
         when(response.getHeaders()).thenReturn(getHttpHeaders());
         when(getHttpHeaders().has("content-type")).thenReturn(true);
         when(getHttpHeaders().value("content-type")).thenReturn("application/json");
-        return new ApiCall.Builder<String, CoreApiException>().globalConfig(getGlobalConfig())
+        return new ApiCall.Builder<String, CoreApiException>()
+                .globalConfig(getGlobalConfig(callback))
                 .requestBuilder(requestBuilder -> requestBuilder.server("https://localhost:3000")
                         .path("/v2/bank-accounts")
                         .queryParam(param -> param.key("cursor").value("cursor").isRequired(false))
@@ -438,24 +509,35 @@ public class EndToEndTest extends MockCoreConfig {
                         .templateParam(param -> param.key("location_id").value("locationId")
                                 .shouldEncode(true).isRequired(false))
                         .headerParam(param -> param.key("accept").value("application/json"))
-                        .authenticationKey("global").httpMethod(Method.GET))
+                        .withAuth(auth -> auth.add("global"))
+                        .httpMethod(Method.GET))
                 .responseHandler(responseHandler -> responseHandler
                         .deserializer(response -> CoreHelper.deserialize(response, String.class))
-                        .nullify404(false).globalErrorCase(getGlobalErrorCases()))
+                        .nullify404(false).globalErrorCase(GLOBAL_ERROR_CASES))
                 .endpointConfiguration(
                         param -> param.arraySerializationFormat(ArraySerializationFormat.INDEXED)
                                 .hasBinaryResponse(false).retryOption(RetryOption.DEFAULT))
                 .build();
     }
 
-    private GlobalConfiguration getGlobalConfig() {
+    /**
+     * Creates a global configuration instance with the provided callback.
+     * This method is designed for extension by subclasses to customize global configuration.
+     * Subclasses should override this method and call super.getGlobalConfig(callback)
+     * to maintain base functionality while adding custom configurations.
+     *
+     * @param callback The callback instance to use in the configuration
+     * @return A fully configured GlobalConfiguration instance
+     */
+    protected GlobalConfiguration getGlobalConfig(Callback callback) {
         String userAgent = "APIMATIC 3.0";
         GlobalConfiguration globalConfig = new GlobalConfiguration.Builder()
                 .authentication(Collections.emptyMap())
                 .compatibilityFactory(getCompatibilityFactory()).httpClient(httpClient)
                 .baseUri(server -> getBaseUri(server)).callback(callback).userAgent(userAgent)
                 .userAgentConfig(Collections.emptyMap()).additionalHeaders(null)
-                .globalHeader("version", "0.1").globalHeader("version", "1.2").build();
+                .globalHeader("version", "0.1").globalHeader("version", "1.2")
+                .build();
         return globalConfig;
     }
 
@@ -466,58 +548,15 @@ public class EndToEndTest extends MockCoreConfig {
     private void prepareStub() throws IOException {
         when(httpClient.execute(any(Request.class), any(CoreEndpointConfiguration.class)))
                 .thenReturn(response);
+        when(httpClient.executeAsync(any(Request.class), any(CoreEndpointConfiguration.class)))
+                .thenReturn(CompletableFuture.completedFuture(response));
         when(getCompatibilityFactory().createHttpHeaders(anyMap())).thenReturn(getHttpHeaders());
         when(getCompatibilityFactory().createHttpRequest(any(Method.class),
-                any(StringBuilder.class), any(HttpHeaders.class), anyMap(), anyList()))
-                        .thenReturn(coreHttpRequest);
+                nullable(StringBuilder.class), nullable(HttpHeaders.class), anyMap(), anyList()))
+                .thenReturn(coreHttpRequest);
         when(getCompatibilityFactory().createHttpContext(coreHttpRequest, response))
                 .thenReturn(context);
         when(context.getResponse()).thenReturn(response);
         when(response.getStatusCode()).thenReturn(SUCCESS_CODE);
     }
-
-    private Map<String, ErrorCase<CoreApiException>> getGlobalErrorCases() {
-        Map<String, ErrorCase<CoreApiException>> globalErrorCase = new HashMap<>();
-        globalErrorCase.put("400", ErrorCase.setTemplate(
-                "Failed to make the request, {$statusCode} {$response.body#/errors/0/code} - "
-                        + "{$response.body#/errors/0/detail}",
-                (reason, context) -> new GlobalTestException(reason, context)));
-
-        globalErrorCase.put("404", ErrorCase.setReason("Not found",
-                (reason, context) -> new CoreApiException(reason, context)));
-
-        globalErrorCase.put("401",
-                ErrorCase.setTemplate("Failed to make the request, {$response.header.content-type} "
-                        + "{$response.body#/errors/0/code} - {$response.body#/errors/0/detail}",
-                        (reason, context) -> new CoreApiException(reason, context)));
-
-        globalErrorCase.put("410",
-                ErrorCase.setTemplate("Failed to make the request, {$response.body}",
-                        (reason, context) -> new CoreApiException(reason, context)));
-
-        globalErrorCase.put("405",
-                ErrorCase.setTemplate("Failed to make the request, {$response.header.accept} "
-                        + "{$response.body#/errors/0/code} - {$response.body#/errors/0/detail}",
-                        (reason, context) -> new CoreApiException(reason, context)));
-
-        globalErrorCase.put("500",
-                ErrorCase.setTemplate("Failed to make the request, http status code: {$statusCode}",
-                        (reason, context) -> new CoreApiException(reason, context)));
-
-        globalErrorCase.put("4XX",
-                ErrorCase.setTemplate(
-                        "Failed to make the request, {$response.body#/errors/0/code} -"
-                                + " {$response.body#/errors/0/detail}",
-                        (reason, context) -> new CoreApiException(reason, context)));
-
-        globalErrorCase.put(ErrorCase.DEFAULT,
-                ErrorCase.setReason(
-                        "Failed to make the request, {$response.body#/errors/0/code} - "
-                                + "{$response.body#/errors/0/detail}",
-                        (reason, context) -> new CoreApiException(reason, context)));
-
-        return globalErrorCase;
-
-    }
-
 }

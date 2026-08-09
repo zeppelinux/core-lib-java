@@ -3,12 +3,19 @@ package io.apimatic.core;
 import java.io.IOException;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.function.UnaryOperator;
+
+import io.apimatic.core.authentication.AuthBuilder;
+import io.apimatic.core.exceptions.AuthValidationException;
 import io.apimatic.core.types.http.request.MultipartFileWrapper;
 import io.apimatic.core.types.http.request.MultipartWrapper;
 import io.apimatic.core.utilities.CoreHelper;
@@ -43,7 +50,7 @@ public final class HttpRequest {
     /**
      * A StringBuilder.
      */
-    private final StringBuilder urlBuilder;
+    private final StringBuilder queryUrlBuilder;
 
     /**
      * An instance of {@link CompatibilityFactory}.
@@ -55,38 +62,48 @@ public final class HttpRequest {
      * @param server
      * @param path
      * @param httpMethod
-     * @param authenticationKey
+     * @param authentication
      * @param queryParams
      * @param templateParams
      * @param headerParams
-     * @param formParams
-     * @param body
+     * @param multipartFormParams
      * @param formParameters
+     * @param body
      * @param bodySerializer
      * @param bodyParameters
      * @param arraySerializationFormat
      * @throws IOException
      */
     private HttpRequest(final GlobalConfiguration coreConfig, final String server,
-            final String path, final Method httpMethod, final String authenticationKey,
+            final String path, final Method httpMethod, final Authentication authentication,
             final Map<String, Object> queryParams,
             final Map<String, SimpleEntry<Object, Boolean>> templateParams,
-            final Map<String, List<String>> headerParams, final Set<Parameter> formParams,
+            final Map<String, List<String>> headerParams, final Set<Parameter> multipartFormParams,
             final Map<String, Object> formParameters, final Object body,
             final Serializer bodySerializer, final Map<String, Object> bodyParameters,
             final ArraySerializationFormat arraySerializationFormat) throws IOException {
         this.coreConfig = coreConfig;
         this.compatibilityFactory = coreConfig.getCompatibilityFactory();
-        urlBuilder = getStringBuilder(server, path);
+        HttpHeaders requestHeaders = addHeaders(headerParams);
+        // Creating a basic request to provide it to auth instances
+        Request request = buildBasicRequest(httpMethod, requestHeaders);
 
+        if (request != null) {
+            applyAuthentication(request, authentication);
+            // include auth query parameters in request query params to have them in the query url
+            if (request.getQueryParameters() != null) {
+                queryParams.putAll(request.getQueryParameters());
+            }
+        }
+
+        queryUrlBuilder = getStringBuilder(server, path, queryParams, arraySerializationFormat);
         processTemplateParams(templateParams);
         Object bodyValue = buildBody(body, bodySerializer, bodyParameters);
         List<SimpleEntry<String, Object>> formFields =
-                generateFormFields(formParams, formParameters, arraySerializationFormat);
+                generateFormFields(multipartFormParams, formParameters, arraySerializationFormat);
         coreHttpRequest =
-                buildRequest(httpMethod, bodyValue, addHeaders(headerParams), queryParams,
+                buildRequest(httpMethod, bodyValue, requestHeaders, queryParams,
                         formFields, arraySerializationFormat);
-        applyAuthentication(authenticationKey);
     }
 
     /**
@@ -96,69 +113,82 @@ public final class HttpRequest {
         return coreHttpRequest;
     }
 
-    private void applyAuthentication(String authenticationKey) {
-        if (authenticationKey == null) {
-            return;
-        }
-
-        Map<String, Authentication> authentications = coreConfig.getAuthentications();
-        if (authentications != null) {
-            Authentication authManager = authentications.get(authenticationKey);
-            if (authManager != null) {
-                authManager.validate();
-                authManager.apply(coreHttpRequest);
-            }
-        }
-    }
-
     private Request buildRequest(
             Method httpMethod, Object body, HttpHeaders headerParams,
             Map<String, Object> queryParams, List<SimpleEntry<String, Object>> formFields,
             ArraySerializationFormat arraySerializationFormat) throws IOException {
         if (body != null) {
-            return compatibilityFactory.createHttpRequest(httpMethod, urlBuilder, headerParams,
+            return compatibilityFactory.createHttpRequest(httpMethod, queryUrlBuilder, headerParams,
                     queryParams, body);
         }
 
-        return compatibilityFactory.createHttpRequest(httpMethod, urlBuilder, headerParams,
+        return compatibilityFactory.createHttpRequest(httpMethod, queryUrlBuilder, headerParams,
                 queryParams, formFields);
     }
 
     /**
-     * @param formParams
-     * @param optionalFormParamaters
+     * Builds a request with minimal query parameters.
+     * @param httpMethod The request HTTP verb.
+     * @param headerParams The request header parameters.
+     * @return the {@link Request} instance.
+     */
+    private Request buildBasicRequest(Method httpMethod, HttpHeaders headerParams)
+            throws IOException {
+        return compatibilityFactory.createHttpRequest(httpMethod, null, headerParams,
+                new HashMap<String, Object>(), Collections.emptyList());
+    }
+
+    private void applyAuthentication(Request request, Authentication authentication) {
+        if (authentication != null) {
+            authentication.validate();
+            if (!authentication.isValid()) {
+                throw new AuthValidationException(authentication.getErrorMessage());
+            }
+
+            authentication.apply(request);
+        }
+    }
+
+    /**
+     * @param multipartFormParams
+     * @param formParameters
      * @param arraySerializationFormat
      * @return list of form parameters
      * @throws IOException
      */
     private List<SimpleEntry<String, Object>> generateFormFields(
-            Set<Parameter> formParams, Map<String, Object> optionalFormParamaters,
+            Set<Parameter> multipartFormParams, Map<String, Object> formParameters,
             ArraySerializationFormat arraySerializationFormat) throws IOException {
-        if (formParams.isEmpty() && optionalFormParamaters.isEmpty()) {
+        if (multipartFormParams.isEmpty() && formParameters.isEmpty()) {
             return null;
         }
-        Map<String, Object> formParameters = new HashMap<>();
-        for (Parameter formParameter : formParams) {
-            String key = formParameter.getKey();
-            Object value = formParameter.getValue();
-            if (formParameter.getMultiPartRequest() != null) {
-                value = handleMultiPartRequest(formParameter);
-            }
+        Map<String, Object> formParamsMap = new HashMap<>();
 
-            formParameters.put(key, value);
+        for (Parameter formParameter : multipartFormParams) {
+            Object value = handleMultiPartRequest(formParameter);
+            formParamsMap.put(formParameter.getKey(), value);
         }
 
-        formParameters.putAll(optionalFormParamaters);
-        return CoreHelper.prepareFormFields(formParameters, arraySerializationFormat);
+        formParamsMap.putAll(formParameters);
+        return CoreHelper.prepareFormFields(formParamsMap, arraySerializationFormat);
     }
 
-    private StringBuilder getStringBuilder(String server, String path) {
-        return new StringBuilder(coreConfig.getBaseUri().apply(server) + path);
+    private StringBuilder getStringBuilder(String server, String path,
+            Map<String, Object> queryParams,
+            ArraySerializationFormat arraySerializationFormat) {
+
+        StringBuilder urlBuilder = new StringBuilder(coreConfig.getBaseUri().apply(server) + path);
+
+        // set query parameters
+        CoreHelper.appendUrlWithQueryParameters(urlBuilder, queryParams,
+                arraySerializationFormat);
+
+        return new StringBuilder(CoreHelper.cleanUrl(urlBuilder));
     }
 
     private void processTemplateParams(Map<String, SimpleEntry<Object, Boolean>> templateParams) {
         if (!templateParams.isEmpty()) {
-            CoreHelper.appendUrlWithTemplateParameters(urlBuilder, templateParams);
+            CoreHelper.appendUrlWithTemplateParameters(queryUrlBuilder, templateParams);
         }
     }
 
@@ -239,9 +269,9 @@ public final class HttpRequest {
         private Method httpMethod;
 
         /**
-         * A authentication key string.
+         * An auth builder for the request.
          */
-        private String authenticationKey;
+        private AuthBuilder authBuilder = new AuthBuilder();
 
         /**
          * A map of query parameters.
@@ -256,12 +286,12 @@ public final class HttpRequest {
         /**
          * A map of header parameters.
          */
-        private Map<String, List<String>> headerParams = new HashMap<>();
+        private Map<String, List<Object>> headerParams = new HashMap<>();
 
         /**
          * A set of {@link Parameter}.
          */
-        private Set<Parameter> formParams = new HashSet<>();
+        private Set<Parameter> multipartFormParams = new HashSet<>();
 
         /**
          * A map of form parameters
@@ -295,6 +325,113 @@ public final class HttpRequest {
         private Parameter.Builder parameterBuilder = new Parameter.Builder();
 
         /**
+         * Update the request parameters using a setter thats called via a JSON pointer.
+         *
+         * @param pointer A JSON pointer pointing to any request field.
+         * @param setter A function that takes in an old value and returns a new value.
+         * @return The updated instance of current request builder.
+         */
+        public Builder updateParameterByJsonPointer(String pointer, UnaryOperator<Object> setter) {
+            if (pointer == null) {
+                return this;
+            }
+
+            String[] pointerParts = pointer.split("#");
+            String prefix = pointerParts[0];
+            String point = pointerParts.length > 1 ? pointerParts[1] : "";
+
+            switch (prefix) {
+            case "$request.path":
+                updateTemplateParams(setter, point);
+                return this;
+            case "$request.query":
+                queryParams = CoreHelper.updateValueByPointer(queryParams, point, setter);
+                return this;
+            case "$request.headers":
+                updateHeaderParams(setter, point);
+                return this;
+            case "$request.body":
+                updateBodyParams(setter, point);
+                return this;
+            default:
+                return this;
+            }
+        }
+
+        private void updateBodyParams(UnaryOperator<Object> setter, String point) {
+            if (body != null) {
+                if (body instanceof CoreFileWrapper) {
+                    return;
+                }
+
+                if (bodySerializer != null && "".equals(point)) {
+                    try {
+                        String serializedBody = bodySerializer.supply();
+                        String newSerializedBody = setter.apply(serializedBody).toString();
+                        bodySerializer = () -> newSerializedBody;
+                    } catch (Exception e) {
+                        // Empty block
+                    }
+                    return;
+                }
+
+                if ((body instanceof String && "".equals(point)) || "".equals(point)) {
+                    body = setter.apply(body);
+                    return;
+                }
+
+                body = CoreHelper.updateValueByPointer(body, point, setter);
+                return;
+            }
+
+            if (bodyParameters != null) {
+                bodyParameters = CoreHelper.updateValueByPointer(bodyParameters, point, setter);
+                return;
+            }
+
+            formParamaters = CoreHelper.updateValueByPointer(formParamaters, point, setter);
+        }
+
+        @SuppressWarnings("unchecked")
+        private void updateHeaderParams(UnaryOperator<Object> setter, String point) {
+            Map<String, Object> simplifiedHeaders = new HashMap<>();
+            for (Entry<String, List<Object>> entry : headerParams.entrySet()) {
+                if (entry.getValue().size() == 1) {
+                    simplifiedHeaders.put(entry.getKey(), entry.getValue().get(0));
+                } else {
+                    simplifiedHeaders.put(entry.getKey(), entry.getValue());
+                }
+            }
+
+            simplifiedHeaders = CoreHelper.updateValueByPointer(simplifiedHeaders, point, setter);
+
+            for (Map.Entry<String, Object> entry : simplifiedHeaders.entrySet()) {
+                if (entry.getValue() instanceof List<?>) {
+                    headerParams.put(entry.getKey(), (List<Object>) entry.getValue());
+                } else {
+                    headerParams.put(entry.getKey(), Arrays.asList(entry.getValue()));
+                }
+            }
+        }
+
+        private void updateTemplateParams(UnaryOperator<Object> setter, String point) {
+            Map<String, Object> simplifiedPath = new HashMap<>();
+            for (Map.Entry<String, SimpleEntry<Object, Boolean>> entry
+                    : templateParams.entrySet()) {
+                simplifiedPath.put(entry.getKey(), entry.getValue().getKey());
+            }
+
+            simplifiedPath = CoreHelper.updateValueByPointer(simplifiedPath, point, setter);
+
+            for (Map.Entry<String, Object> entry : simplifiedPath.entrySet()) {
+                // Preserve the original boolean encoding flag
+                Boolean originalFlag = templateParams.get(entry.getKey()).getValue();
+                templateParams.put(entry.getKey(),
+                        new SimpleEntry<>(entry.getValue(), originalFlag));
+            }
+        }
+
+        /**
          * Base uri server address.
          * @param server the base uri address.
          * @return Builder.
@@ -325,12 +462,12 @@ public final class HttpRequest {
         }
 
         /**
-         * Setter for requiresAuth.
-         * @param authenticationKey string value for authenticationKey.
+         * Setter for Authentication Builder, used for authenticating the request.
+         * @param consumer the builder consumer for authentication.
          * @return Builder.
          */
-        public Builder authenticationKey(String authenticationKey) {
-            this.authenticationKey = authenticationKey;
+        public Builder withAuth(Consumer<AuthBuilder> consumer) {
+            consumer.accept(authBuilder);
             return this;
         }
 
@@ -343,7 +480,6 @@ public final class HttpRequest {
             this.queryParams.putAll(queryParameters);
             return this;
         }
-
 
         /**
          * To configure the query paramater.
@@ -386,15 +522,12 @@ public final class HttpRequest {
             Parameter httpHeaderParameter = parameterBuilder.build();
             httpHeaderParameter.validate();
             String key = httpHeaderParameter.getKey();
-            String value =
-                    httpHeaderParameter.getValue() == null ? null
-                            : httpHeaderParameter.getValue().toString();
 
             if (headerParams.containsKey(key)) {
-                headerParams.get(key).add(value);
+                headerParams.get(key).add(httpHeaderParameter.getValue());
             } else {
-                List<String> headerValues = new ArrayList<String>();
-                headerValues.add(value);
+                List<Object> headerValues = new ArrayList<Object>();
+                headerValues.add(httpHeaderParameter.getValue());
                 headerParams.put(key, headerValues);
             }
             return this;
@@ -410,7 +543,12 @@ public final class HttpRequest {
             action.accept(parameterBuilder);
             Parameter formParameter = parameterBuilder.build();
             formParameter.validate();
-            this.formParams.add(formParameter);
+            if (formParameter.getMultiPartRequest() != null) {
+                this.multipartFormParams.add(formParameter);
+                return this;
+            }
+            this.formParamaters.put(formParameter.getKey(), formParameter.getValue());
+
             return this;
         }
 
@@ -465,6 +603,68 @@ public final class HttpRequest {
             return this;
         }
 
+        private Map<String, List<String>> getHeaderParams() {
+            Map<String, List<String>> converted = new HashMap<>();
+
+            for (Map.Entry<String, List<Object>> entry : headerParams.entrySet()) {
+                String key = entry.getKey();
+                List<Object> originalList = entry.getValue();
+
+                List<String> serializedList = new ArrayList<>();
+                for (Object obj : originalList) {
+                    serializedList.add(getSerializedHeaderValue(obj));
+                }
+
+                converted.put(key, serializedList);
+            }
+
+            return converted;
+        }
+
+        private static String getSerializedHeaderValue(Object obj) {
+            if (obj == null) {
+                return null;
+            }
+
+            if (CoreHelper.isTypeCombinatorStringCase(obj)
+                    || CoreHelper.isTypeCombinatorDateTimeCase(obj)
+                    || obj instanceof String) {
+                return obj.toString();
+            }
+
+            return CoreHelper.trySerialize(obj);
+        }
+
+        /**
+         * @return A copy of this request builder instance.
+         */
+        public Builder copy() {
+            Builder copy = new Builder();
+            copy.server = server;
+            copy.path = path;
+            copy.httpMethod = httpMethod;
+            copy.authBuilder = authBuilder.copy();
+            copy.queryParams = new HashMap<>(queryParams);
+            for (Entry<String, SimpleEntry<Object, Boolean>> entry : templateParams.entrySet()) {
+                copy.templateParams.put(entry.getKey(),
+                    new SimpleEntry<>(entry.getValue().getKey(), entry.getValue().getValue()));
+            }
+            for (Entry<String, List<Object>> entry : headerParams.entrySet()) {
+                copy.headerParams.put(entry.getKey(), new ArrayList<>(entry.getValue()));
+            }
+            copy.multipartFormParams = new HashSet<>(multipartFormParams);
+            copy.formParamaters = new HashMap<>(formParamaters);
+            copy.body = body;
+            copy.bodySerializer = bodySerializer;
+            if (bodyParameters != null) {
+                copy.bodyParameters = new HashMap<>(bodyParameters);
+            }
+            copy.arraySerializationFormat = arraySerializationFormat;
+            copy.parameterBuilder = new Parameter.Builder();
+
+            return copy;
+        }
+
         /**
          * Initialise the CoreHttpRequest.
          * @param coreConfig the configuration for the Http request.
@@ -472,10 +672,12 @@ public final class HttpRequest {
          * @throws IOException Signals that an I/O exception of some sort has occurred.
          */
         public Request build(GlobalConfiguration coreConfig) throws IOException {
+            Authentication authentication = authBuilder.build(coreConfig.getAuthentications());
             HttpRequest coreRequest =
-                    new HttpRequest(coreConfig, server, path, httpMethod, authenticationKey,
-                            queryParams, templateParams, headerParams, formParams, formParamaters,
-                            body, bodySerializer, bodyParameters, arraySerializationFormat);
+                    new HttpRequest(coreConfig, server, path, httpMethod, authentication,
+                            queryParams, templateParams, getHeaderParams(), multipartFormParams,
+                            formParamaters, body, bodySerializer, bodyParameters,
+                            arraySerializationFormat);
             Request coreHttpRequest = coreRequest.getCoreHttpRequest();
 
             if (coreConfig.getHttpCallback() != null) {
